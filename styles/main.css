@@ -1233,6 +1233,19 @@ body.resizing .resize-handle * {
   color: var(--color-text);
 }
 
+/* Active line highlight overlay — sits between hlPre and textarea */
+.preview__line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  background: var(--color-line-highlight);
+  border-left: 2px solid var(--color-primary);
+  z-index: 0;
+  display: none;
+  transition: opacity 0.15s ease;
+}
+
 /* ── Font size controls ── */
 .preview__font-btn {
   display: inline-flex;

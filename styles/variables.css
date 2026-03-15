@@ -37,6 +37,7 @@
   --color-primary-hover: #0550ae;
   --color-primary-bg: rgba(9, 105, 218, 0.10);
   --color-primary-glow: rgba(9, 105, 218, 0.30);
+  --color-line-highlight: rgba(9, 105, 218, 0.13);
 
   --color-error: #d1242f;
   --color-error-bg: rgba(209, 36, 47, 0.07);
@@ -141,6 +142,7 @@
   --color-primary-hover: #9ae5ee;
   --color-primary-bg: rgba(120, 220, 232, 0.14);
   --color-primary-glow: rgba(120, 220, 232, 0.35);
+  --color-line-highlight: rgba(120, 220, 232, 0.16);
 
   --color-error: #ff6188;
   --color-error-bg: rgba(255, 97, 136, 0.12);

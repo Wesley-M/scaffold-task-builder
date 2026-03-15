@@ -90,6 +90,8 @@ export function createContextPanel() {
   const hlCode = el('code', { className: 'preview__hl-code' });
   hlPre.appendChild(hlCode);
 
+  const lineHighlight = el('div', { className: 'preview__line-highlight' });
+
   const textarea = el('textarea', {
     className: 'preview__input',
     spellcheck: 'false',
@@ -98,7 +100,7 @@ export function createContextPanel() {
     placeholder: '# Your .task file will appear here\n# Edit directly — changes sync to the pipeline',
   });
 
-  editorWrap.append(hlPre, textarea);
+  editorWrap.append(hlPre, lineHighlight, textarea);
 
   const parseErrorBar = el('div', { className: 'preview__error-bar' });
 
@@ -113,6 +115,7 @@ export function createContextPanel() {
   }
   function applyFontSize() {
     editorWrap.style.fontSize = `${fontSize}px`;
+    positionLineHighlight();
   }
   applyFontSize();
 
@@ -120,11 +123,67 @@ export function createContextPanel() {
   textarea.addEventListener('scroll', () => {
     hlPre.scrollTop = textarea.scrollTop;
     hlPre.scrollLeft = textarea.scrollLeft;
+    positionLineHighlight();
   });
 
   // ── Highlighting ──
   function updateHighlight(text) {
     hlCode.innerHTML = highlightTask(text);
+  }
+
+  // ── Line highlight (bidirectional card ↔ preview linking) ──
+  let activeHighlightLine = -1;
+
+  function getLineForItem(selectedItemId) {
+    if (!selectedItemId) return -1;
+    for (const [line, id] of currentLineMap) {
+      if (id === selectedItemId) return line;
+    }
+    return -1;
+  }
+
+  function positionLineHighlight() {
+    if (activeHighlightLine < 0) {
+      lineHighlight.style.display = 'none';
+      return;
+    }
+    const lineHeight = fontSize * 1.7;
+    const paddingTop = parseFloat(getComputedStyle(textarea).paddingTop) || 0;
+    const top = paddingTop + activeHighlightLine * lineHeight - textarea.scrollTop;
+    const wrapHeight = editorWrap.clientHeight;
+
+    // Hide if scrolled out of view
+    if (top + lineHeight < 0 || top > wrapHeight) {
+      lineHighlight.style.display = 'none';
+      return;
+    }
+
+    lineHighlight.style.display = '';
+    lineHighlight.style.top = `${top}px`;
+    lineHighlight.style.height = `${lineHeight}px`;
+  }
+
+  function updateLineHighlight(selectedItemId, shouldScroll) {
+    const lineNum = getLineForItem(selectedItemId);
+    activeHighlightLine = lineNum;
+    positionLineHighlight();
+
+    if (shouldScroll && lineNum >= 0) {
+      scrollPreviewToLine(lineNum);
+    }
+  }
+
+  function scrollPreviewToLine(lineNum) {
+    const lineHeight = fontSize * 1.7;
+    const paddingTop = parseFloat(getComputedStyle(textarea).paddingTop) || 0;
+    const lineTop = paddingTop + lineNum * lineHeight;
+    const viewportHeight = textarea.clientHeight;
+
+    if (lineTop < textarea.scrollTop || lineTop + lineHeight > textarea.scrollTop + viewportHeight) {
+      textarea.scrollTop = lineTop - viewportHeight / 3;
+      hlPre.scrollTop = textarea.scrollTop;
+      positionLineHighlight();
+    }
   }
 
   // ── Bidirectional sync logic ──
@@ -327,6 +386,7 @@ export function createContextPanel() {
 
   store.subscribe((state) => {
     syncFromStore(state);
+    updateLineHighlight(state.selectedItemId, !isUserEditing);
     renderVariablesTable(varsTable, state);
     renderValidation(validationList, state);
 
