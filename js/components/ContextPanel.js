@@ -91,6 +91,7 @@ export function createContextPanel() {
   hlPre.appendChild(hlCode);
 
   const lineHighlight = el('div', { className: 'preview__line-highlight' });
+  let activeHighlightLine = -1;
 
   const textarea = el('textarea', {
     className: 'preview__input',
@@ -132,7 +133,6 @@ export function createContextPanel() {
   }
 
   // ── Line highlight (bidirectional card ↔ preview linking) ──
-  let activeHighlightLine = -1;
 
   function getLineForItem(selectedItemId) {
     if (!selectedItemId) return -1;
@@ -158,7 +158,7 @@ export function createContextPanel() {
       return;
     }
 
-    lineHighlight.style.display = '';
+    lineHighlight.style.display = 'block';
     lineHighlight.style.top = `${top}px`;
     lineHighlight.style.height = `${lineHeight}px`;
   }

@@ -24,15 +24,14 @@
   border-color: var(--color-primary);
   border-left: 3px solid var(--color-primary);
   background: var(--color-primary-bg);
-  box-shadow: 0 0 0 2px var(--color-primary-glow),
-              0 0 16px var(--color-primary-glow),
+  box-shadow: 0 0 0 1px var(--color-primary-glow),
+              0 0 8px var(--color-primary-glow),
               var(--shadow-card);
-  animation: card-selected-pulse 1.5s ease-in-out infinite alternate;
 }
 
 @keyframes card-selected-pulse {
-  from { box-shadow: 0 0 0 2px var(--color-primary-glow), 0 0 16px var(--color-primary-glow), var(--shadow-card); }
-  to   { box-shadow: 0 0 0 3px var(--color-primary-glow), 0 0 24px var(--color-primary-glow), var(--shadow-card); }
+  from { box-shadow: 0 0 0 1px var(--color-primary-glow), 0 0 8px var(--color-primary-glow), var(--shadow-card); }
+  to   { box-shadow: 0 0 0 2px var(--color-primary-glow), 0 0 12px var(--color-primary-glow), var(--shadow-card); }
 }
 
 .card--has-error {

@@ -107,6 +107,9 @@ export function createInstructionCard(item, errors = []) {
   // Click header to select
   header.addEventListener('click', () => store.selectItem(item.id));
 
+  // Focus any input inside the card to select it
+  card.addEventListener('focusin', () => store.selectItem(item.id));
+
   card.appendChild(header);
 
   // ── Body (fields) — hidden when collapsed ──

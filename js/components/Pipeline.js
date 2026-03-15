@@ -155,6 +155,13 @@ export function createPipeline() {
     const isEditing = list.contains(ae) && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA');
     if (!isEditing) {
       renderPipeline(list, state);
+    } else {
+      // Update selection glow without full re-render (preserves focus)
+      list.querySelectorAll('.card--selected').forEach(c => c.classList.remove('card--selected'));
+      if (state.selectedItemId) {
+        const sel = list.querySelector(`.card[data-id="${state.selectedItemId}"]`);
+        if (sel) sel.classList.add('card--selected');
+      }
     }
 
     // Update count

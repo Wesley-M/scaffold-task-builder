@@ -9,8 +9,8 @@
   <script>
     (function() {
       var saved = localStorage.getItem('scaffold-ui-theme');
-      if (saved === 'dark') {
-        document.documentElement.dataset.theme = 'dark';
+      if (saved && saved !== 'light') {
+        document.documentElement.dataset.theme = saved;
       } else if (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.documentElement.dataset.theme = 'dark';
       }

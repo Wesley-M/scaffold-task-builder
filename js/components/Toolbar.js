@@ -93,29 +93,98 @@ export function createToolbar() {
     onClick: () => toggleShortcutsOverlay(),
   }, icon('keyboard', 14), 'Keys');
 
-  // ── Theme Toggle ──
+  // ── Theme Selector (Dropdown) ──
+  const THEMES = [
+    { key: 'light',     label: 'Light',          swatch: '#0969da',  group: 'light' },
+    { key: 'solarized', label: 'Solarized',      swatch: '#268bd2',  group: 'light' },
+    { key: 'latte',     label: 'Catppuccin Latte', swatch: '#1e66f5', group: 'light' },
+    { key: 'dark',      label: 'Monokai Pro',    swatch: '#78dce8',  group: 'dark'  },
+    { key: 'nord',      label: 'Nord',           swatch: '#88c0d0',  group: 'dark'  },
+    { key: 'dracula',   label: 'Dracula',        swatch: '#bd93f9',  group: 'dark'  },
+    { key: 'tokyo',     label: 'Tokyo Night',    swatch: '#7aa2f7',  group: 'dark'  },
+  ];
+
+  function currentThemeKey() {
+    return document.documentElement.dataset.theme || 'light';
+  }
+
+  function applyTheme(key) {
+    if (key === 'light') {
+      delete document.documentElement.dataset.theme;
+    } else {
+      document.documentElement.dataset.theme = key;
+    }
+    localStorage.setItem('scaffold-ui-theme', key);
+    updateThemeBtn();
+  }
+
+  const themeWrap = el('div', { className: 'theme-selector' });
+
   const themeBtn = el('button', {
     className: 'toolbar__btn toolbar__btn--secondary toolbar__btn--compact',
-    dataset: { tooltip: 'Toggle dark/light theme' },
-    onClick: () => {
-      const html = document.documentElement;
-      const isDark = html.dataset.theme === 'dark';
-      if (isDark) {
-        delete html.dataset.theme;
-        localStorage.setItem('scaffold-ui-theme', 'light');
-      } else {
-        html.dataset.theme = 'dark';
-        localStorage.setItem('scaffold-ui-theme', 'dark');
-      }
-      updateThemeBtn();
-    },
+    dataset: { tooltip: 'Change color theme' },
+    onClick: () => toggleThemeDropdown(),
   });
+
+  const themeDropdown = el('div', { className: 'theme-dropdown' });
+
+  function buildDropdown() {
+    clearChildren(themeDropdown);
+    const current = currentThemeKey();
+    let lastGroup = null;
+
+    for (const t of THEMES) {
+      if (t.group !== lastGroup) {
+        const groupLabel = t.group === 'light' ? 'Light' : 'Dark';
+        themeDropdown.appendChild(el('div', { className: 'theme-dropdown__group' }, groupLabel));
+        lastGroup = t.group;
+      }
+      const item = el('button', {
+        className: `theme-dropdown__item ${t.key === current ? 'theme-dropdown__item--active' : ''}`,
+        onClick: () => { applyTheme(t.key); closeThemeDropdown(); },
+      },
+        el('span', { className: 'theme-dropdown__swatch', style: { background: t.swatch } }),
+        t.label,
+        t.key === current ? el('span', { className: 'theme-dropdown__check' }, '✓') : '',
+      );
+      themeDropdown.appendChild(item);
+    }
+  }
+
+  let themeOpen = false;
+
+  function toggleThemeDropdown() {
+    themeOpen ? closeThemeDropdown() : openThemeDropdown();
+  }
+
+  function openThemeDropdown() {
+    buildDropdown();
+    themeDropdown.style.display = 'block';
+    themeOpen = true;
+    requestAnimationFrame(() => {
+      document.addEventListener('click', onClickOutsideTheme, true);
+    });
+  }
+
+  function closeThemeDropdown() {
+    themeDropdown.style.display = 'none';
+    themeOpen = false;
+    document.removeEventListener('click', onClickOutsideTheme, true);
+  }
+
+  function onClickOutsideTheme(e) {
+    if (!themeWrap.contains(e.target)) closeThemeDropdown();
+  }
+
   function updateThemeBtn() {
     clearChildren(themeBtn);
-    const isDark = document.documentElement.dataset.theme === 'dark';
-    themeBtn.append(icon(isDark ? 'sun' : 'moon', 14), isDark ? 'Light' : 'Dark');
+    const theme = THEMES.find(t => t.key === currentThemeKey()) || THEMES[0];
+    const isDark = theme.group === 'dark';
+    themeBtn.append(icon(isDark ? 'moon' : 'sun', 14), theme.label, ' ', icon('chevronDown', 10));
   }
   updateThemeBtn();
+
+  themeWrap.append(themeBtn, themeDropdown);
 
   // ── Global Font Size ──
   const GFONT_KEY = 'scaffold-ui-global-font';
@@ -165,7 +234,7 @@ export function createToolbar() {
     guideBtn.classList.add('toolbar__btn--guide-pulse');
   }
 
-  actions.append(undoBtn, redoBtn, shortcutsBtn, themeBtn, fontDown, fontLabel, fontUp, openFolderBtn, newBtn, saveBtn);
+  actions.append(undoBtn, redoBtn, shortcutsBtn, themeWrap, fontDown, fontLabel, fontUp, openFolderBtn, newBtn, saveBtn);
 
   toolbar.append(brand, guideBtn, helpBtn, taskNameGroup, actions);
 
