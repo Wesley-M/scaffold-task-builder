@@ -19,36 +19,43 @@ function init() {
   if (!app) return;
 
   // ── Keyboard shortcuts (registered first, before any DOM that could error) ──
+  // Save uses capture phase so it always fires before the browser's save dialog.
+  // All other shortcuts use bubble phase so native INPUT/TEXTAREA behaviour
+  // (text undo, redo, select-all, etc.) is preserved when an editable field is focused.
   window.addEventListener('keydown', (e) => {
-    const isMod = e.metaKey || e.ctrlKey;
-
-    if (isMod && e.code === 'KeyS') {
+    if ((e.metaKey || e.ctrlKey) && e.code === 'KeyS') {
       e.preventDefault();
       e.stopPropagation();
       handleSave();
-    } else if (isMod && e.key === 'z' && !e.shiftKey) {
+    }
+  }, true);
+
+  document.addEventListener('keydown', (e) => {
+    const isMod = e.metaKey || e.ctrlKey;
+    const inEditable = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA'
+      || e.target.isContentEditable;
+
+    if (isMod && e.key === 'z' && !e.shiftKey && !inEditable) {
       e.preventDefault();
       store.undo();
-    } else if (isMod && e.key === 'z' && e.shiftKey) {
+    } else if (isMod && e.key === 'z' && e.shiftKey && !inEditable) {
       e.preventDefault();
       store.redo();
-    } else if (isMod && e.key === 'd') {
+    } else if (isMod && e.key === 'd' && !inEditable) {
       e.preventDefault();
       const selected = store.getState().selectedItemId;
       if (selected) store.duplicateItem(selected);
-    } else if (e.key === 'Delete' || e.key === 'Backspace') {
-      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-        const selected = store.getState().selectedItemId;
-        if (selected) { e.preventDefault(); store.removeItem(selected); }
-      }
-    } else if (e.key === '?' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    } else if ((e.key === 'Delete' || e.key === 'Backspace') && !inEditable) {
+      const selected = store.getState().selectedItemId;
+      if (selected) { e.preventDefault(); store.removeItem(selected); }
+    } else if (e.key === '?' && !inEditable) {
       e.preventDefault();
       toggleShortcutsOverlay();
     } else if (e.key === 'Escape') {
       const overlay = document.getElementById('shortcuts-overlay');
       if (overlay) { overlay.remove(); }
     }
-  }, true);
+  });
 
   // ── Tooltip system (must be before any DOM with data-tooltip) ──
   initTooltips();
