@@ -11,6 +11,7 @@ import { initTooltips } from './lib/tooltip.js';
 import { debounce, el, clearChildren } from './utils/dom.js';
 import { icon } from './icons.js';
 import { maybeShowOnboarding, showOnboarding } from './components/OnboardingGuide.js';
+import { openHelpCenter } from './components/HelpCenter.js';
 import { SAMPLE_TASK_STATE } from './sampleTask.js';
 
 function init() {
@@ -100,8 +101,12 @@ function init() {
   // Trigger initial render
   store.setState({}, { skipHistory: true });
 
-  // ── Onboarding guide (first visit) ──
-  maybeShowOnboarding();
+  // ── First visit: show Help Center; returning visitors: onboarding tour if not done ──
+  if (!localStorage.getItem('scaffold-ui-guide-seen')) {
+    setTimeout(() => openHelpCenter('welcome'), 500);
+  } else {
+    maybeShowOnboarding();
+  }
 }
 
 // ─── Panel Minimize / Maximize / Restore ─────────────────────────

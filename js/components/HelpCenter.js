@@ -341,6 +341,7 @@ export function openHelpCenter(startArticleId = 'welcome') {
   // ── Close ──
   function close() {
     overlay.classList.add('help-overlay--closing');
+    localStorage.setItem('scaffold-ui-guide-seen', '1');
     setTimeout(() => overlay.remove(), 200);
   }
 
