@@ -14,22 +14,27 @@ import { maybeShowOnboarding, showOnboarding } from './components/OnboardingGuid
 import { openHelpCenter } from './components/HelpCenter.js';
 import { SAMPLE_TASK_STATE } from './sampleTask.js';
 
+// ── Cmd/Ctrl+S interception ──────────────────────────────────────
+// Registered at module level (earliest possible) to reliably beat
+// the browser's native "Save Page As" dialog on every platform.
+window.addEventListener('keydown', (e) => {
+  const isSave = (e.metaKey || e.ctrlKey)
+    && (e.code === 'KeyS' || e.key === 's' || e.key === 'S');
+  if (isSave) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    handleSave();
+  }
+}, true);
+
 function init() {
   const app = document.getElementById('app');
   if (!app) return;
 
-  // ── Keyboard shortcuts (registered first, before any DOM that could error) ──
-  // Save uses capture phase so it always fires before the browser's save dialog.
-  // All other shortcuts use bubble phase so native INPUT/TEXTAREA behaviour
+  // ── Keyboard shortcuts ──────────────────────────────────────────
+  // Cmd/Ctrl+S is handled at module level (above) for earliest interception.
+  // Other shortcuts use bubble phase so native INPUT/TEXTAREA behaviour
   // (text undo, redo, select-all, etc.) is preserved when an editable field is focused.
-  window.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.code === 'KeyS') {
-      e.preventDefault();
-      e.stopPropagation();
-      handleSave();
-    }
-  }, true);
-
   document.addEventListener('keydown', (e) => {
     const isMod = e.metaKey || e.ctrlKey;
     const inEditable = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA'
