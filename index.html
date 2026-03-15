@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scaffold Task Builder</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='3' width='12' height='12' rx='2' fill='%235c6bc0'/><rect x='17' y='3' width='12' height='12' rx='2' fill='%2336b37e'/><rect x='3' y='17' width='12' height='12' rx='2' fill='%23ff8b00'/><rect x='17' y='17' width='12' height='12' rx='2' fill='%23e91e63'/></svg>" />
+  <script>
+    (function() {
+      var saved = localStorage.getItem('scaffold-ui-theme');
+      if (saved === 'dark') {
+        document.documentElement.dataset.theme = 'dark';
+      } else if (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+/* ─── CSS Custom Properties (Design Tokens) ─────────────────────── */
+/*
+ * Light: Crisp high-contrast light theme inspired by GitHub's light-high-contrast
+ *        and Monokai Light, tuned for a modern, premium feel with sharp readability.
+ *
+ * Dark:  Monokai Pro — the rich, warm dark palette from the Monokai Pro editor theme.
+ *        Colors sourced from the official Monokai Pro filter (default).
+ *
+ * Monokai Pro palette:
+ *   bg       #2d2a2e    surface  #403e41    overlay  #524e53
+ *   text     #fcfcfa    dimmed   #939293    muted    #727072
+ *   red      #ff6188    orange   #fc9867    yellow   #ffd866
+ *   green    #a9dc76    blue     #78dce8    violet   #ab9df2
+ */
+
+/* ── Light theme (High-contrast modern light) ── */
+:root {
+  --color-bg: #ffffff;
+  --color-bg-surface: #f6f8fa;
+  --color-bg-elevated: #ffffff;
+  --color-bg-card: #ffffff;
+  --color-bg-hover: rgba(0, 0, 0, 0.04);
+  --color-bg-active: rgba(0, 0, 0, 0.07);
+  --color-bg-input: #ffffff;
+
+  --color-border: #d1d9e0;
+  --color-border-subtle: #e1e4e8;
+  --color-border-strong: #8b949e;
+  --color-border-focus: #0969da;
+
+  --color-text: #1f2328;
+  --color-text-secondary: #454c54;
+  --color-text-muted: #656d76;
+  --color-text-accent: #8250df;
+
+  --color-primary: #0969da;
+  --color-primary-hover: #0550ae;
+  --color-primary-bg: rgba(9, 105, 218, 0.10);
+  --color-primary-glow: rgba(9, 105, 218, 0.30);
+
+  --color-error: #d1242f;
+  --color-error-bg: rgba(209, 36, 47, 0.07);
+  --color-error-border: rgba(209, 36, 47, 0.35);
+  --color-warning: #bf5700;
+  --color-warning-bg: rgba(191, 87, 0, 0.07);
+  --color-warning-border: rgba(191, 87, 0, 0.35);
+  --color-success: #1a7f37;
+  --color-success-bg: rgba(26, 127, 55, 0.07);
+
+  --color-cat-file: #0a7b6c;
+  --color-cat-content: #0969da;
+  --color-cat-anchor: #bf5700;
+  --color-cat-java: #8250df;
+
+  /* Spacing */
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+
+  /* Radius */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Font */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+  --font-offset: 0px;
+  --font-size-2xs: calc(11px + var(--font-offset));
+  --font-size-xs: calc(12px + var(--font-offset));
+  --font-size-sm: calc(13px + var(--font-offset));
+  --font-size-md: calc(14px + var(--font-offset));
+  --font-size-lg: calc(16px + var(--font-offset));
+  --font-size-xl: calc(19px + var(--font-offset));
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.10);
+  --shadow-glow: 0 0 20px rgba(9, 105, 218, 0.10);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.06);
+
+  /* Theme-sensitive hardcoded values */
+  --scrollbar-thumb: rgba(0,0,0,0.14);
+  --scrollbar-thumb-hover: rgba(0,0,0,0.22);
+  --toolbar-shadow: 0 1px 0 rgba(0,0,0,0.08);
+  --code-inset-shadow: inset 0 1px 3px rgba(0,0,0,0.04);
+  --resize-hover-bg: rgba(9, 105, 218, 0.06);
+  --card-hover-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  --selection-bg: rgba(9, 105, 218, 0.18);
+
+  /* Transitions */
+  --transition-fast: 100ms ease;
+  --transition-normal: 180ms ease;
+  --transition-smooth: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Sizes */
+  --toolbar-height: 54px;
+  --palette-width: 290px;
+  --context-panel-width: 340px;
+  --status-bar-height: 30px;
+  --resize-handle-width: 5px;
+
+  /* Z-indices */
+  --z-dropdown: 100;
+  --z-resize: 50;
+  --z-toast: 1000;
+}
+
+/* ── Dark theme (Monokai Pro) ── */
+[data-theme="dark"] {
+  --color-bg: #2d2a2e;
+  --color-bg-surface: #403e41;
+  --color-bg-elevated: #4a474b;
+  --color-bg-card: #353236;
+  --color-bg-hover: rgba(255, 255, 255, 0.06);
+  --color-bg-active: rgba(255, 255, 255, 0.10);
+  --color-bg-input: #2d2a2e;
+
+  --color-border: #524e53;
+  --color-border-subtle: #454247;
+  --color-border-strong: #69666b;
+  --color-border-focus: #78dce8;
+
+  --color-text: #fcfcfa;
+  --color-text-secondary: #c1c0c0;
+  --color-text-muted: #939293;
+  --color-text-accent: #ab9df2;
+
+  --color-primary: #78dce8;
+  --color-primary-hover: #9ae5ee;
+  --color-primary-bg: rgba(120, 220, 232, 0.14);
+  --color-primary-glow: rgba(120, 220, 232, 0.35);
+
+  --color-error: #ff6188;
+  --color-error-bg: rgba(255, 97, 136, 0.12);
+  --color-error-border: rgba(255, 97, 136, 0.40);
+  --color-warning: #fc9867;
+  --color-warning-bg: rgba(252, 152, 103, 0.12);
+  --color-warning-border: rgba(252, 152, 103, 0.40);
+  --color-success: #a9dc76;
+  --color-success-bg: rgba(169, 220, 118, 0.12);
+
+  --color-cat-file: #a9dc76;
+  --color-cat-content: #78dce8;
+  --color-cat-anchor: #fc9867;
+  --color-cat-java: #ab9df2;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.40);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.45);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.55);
+  --shadow-glow: 0 0 20px rgba(120, 220, 232, 0.10);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.30), 0 0 0 1px rgba(255,255,255,0.04);
+
+  --scrollbar-thumb: rgba(255,255,255,0.10);
+  --scrollbar-thumb-hover: rgba(255,255,255,0.20);
+  --toolbar-shadow: 0 1px 0 rgba(0,0,0,0.35);
+  --code-inset-shadow: inset 0 1px 3px rgba(0,0,0,0.30);
+  --resize-hover-bg: rgba(120, 220, 232, 0.06);
+  --card-hover-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  --selection-bg: rgba(120, 220, 232, 0.25);
+}

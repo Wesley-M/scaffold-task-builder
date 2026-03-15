@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Scaffold UI — Test Suite</title>
+  <style>
+    :root {
+      --pass: #2aa198;
+      --fail: #dc322f;
+      --bg: #fdf6e3;
+      --text: #073642;
+      --muted: #586e75;
+      --surface: #eee8d5;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #002b36;
+        --text: #eee8d5;
+        --muted: #93a1a1;
+        --surface: #073642;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 13px;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px 32px;
+      line-height: 1.6;
+    }
+    h1 { font-size: 18px; margin-bottom: 16px; }
+    .test-summary {
+      font-size: 15px;
+      font-weight: bold;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    .test-summary--pass { background: rgba(42, 161, 152, 0.15); color: var(--pass); }
+    .test-summary--fail { background: rgba(220, 50, 47, 0.15); color: var(--fail); }
+    .test-suite {
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border-radius: 6px;
+    }
+    .test-suite__header {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .test-case { padding: 2px 0; }
+    .test-case--pass { color: var(--pass); }
+    .test-case--fail { color: var(--fail); font-weight: bold; }
+    .test-error {
+      color: var(--fail);
+      font-size: 11px;
+      margin: 2px 0 6px 24px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      opacity: 0.85;
+    }
+    #results { max-width: 900px; }
+    .loading { color: var(--muted); font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>Scaffold Task Builder — Test Suite</h1>
+  <div id="results"><p class="loading">Running tests…</p></div>
+
+  <script type="module">
+    import { renderResults, waitForAsync } from './tests/framework.js';
+    import parserTests from './tests/parser.test.js';
+    import serializerTests from './tests/serializer.test.js';
+    import validatorTests from './tests/validator.test.js';
+    import resolverTests from './tests/resolver.test.js';
+    import storeTests from './tests/store.test.js';
+    import integrationTests from './tests/integration.test.js';
+    import domTests from './tests/dom.test.js';
+    import componentTests from './tests/components.test.js';
+
+    const container = document.getElementById('results');
+    container.innerHTML = '';
+
+    // Run all test suites
+    try {
+      parserTests();
+      serializerTests();
+      validatorTests();
+      resolverTests();
+      storeTests();
+      integrationTests();
+      domTests();
+      componentTests();
+    } catch (e) {
+      const errEl = document.createElement('pre');
+      errEl.style.color = 'var(--fail)';
+      errEl.textContent = `Fatal error running tests:\n${e.stack || e.message}`;
+      container.appendChild(errEl);
+    }
+
+    // Wait for async tests (debounce, toast, rAF) then render
+    await waitForAsync();
+    renderResults(container);
+  </script>
+</body>
+</html>
