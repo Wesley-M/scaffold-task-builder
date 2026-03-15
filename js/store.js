@@ -352,7 +352,8 @@ class Store {
     });
   }
 
-  selectItem(id) {
+  selectItem(id, opts = {}) {
+    this._scrollToSelected = opts.scroll !== false;
     this.setState(s => ({ ...s, selectedItemId: id }), { skipHistory: true });
   }
 

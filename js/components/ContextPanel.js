@@ -154,11 +154,11 @@ export function createContextPanel() {
     return textBefore.split('\n').length - 1; // 0-based line number
   }
 
-  function selectItemAtCursor() {
+  function selectItemAtCursor(opts = {}) {
     const line = getLineAtCursor();
     const itemId = currentLineMap.get(line);
     if (itemId) {
-      store.selectItem(itemId);
+      store.selectItem(itemId, opts);
     }
   }
 
@@ -183,6 +183,11 @@ export function createContextPanel() {
         // Rebuild lineMap with the new item IDs from the parse
         const result = serializeTaskWithLineMap(store.getState());
         currentLineMap = result.lineMap;
+
+        // Re-select the item at the cursor position (loadState clears selectedItemId)
+        if (isUserEditing) {
+          selectItemAtCursor({ scroll: false });
+        }
 
         // Run live lint on the parsed result to surface warnings
         const issues = lintPreviewText(text, parsed);
@@ -285,9 +290,11 @@ export function createContextPanel() {
   textarea.addEventListener('focus', () => { isUserEditing = true; });
   textarea.addEventListener('blur', () => {
     isUserEditing = false;
-    store.selectItem(null); // Clear pipeline highlight when leaving preview
     syncToStore();
-    setTimeout(() => syncFromStore(store.getState()), 700);
+    setTimeout(() => {
+      store.selectItem(null);
+      syncFromStore(store.getState());
+    }, 700);
   });
   textarea.addEventListener('input', () => {
     updateHighlight(textarea.value);

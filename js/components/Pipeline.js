@@ -198,7 +198,8 @@ function renderPipeline(container, state) {
   }
 
   // Scroll selected card into view (smooth, only if off-screen)
-  if (selectedCard) {
+  // Skip scroll when selection was set from preview cursor tracking
+  if (selectedCard && store._scrollToSelected !== false) {
     requestAnimationFrame(() => {
       selectedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });

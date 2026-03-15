@@ -1,27 +1,36 @@
 // ─── Sample Task ─────────────────────────────────────────────────
-// A small but realistic example task loaded on first visit.
+// A showpiece example — looks great, shows off every feature.
 
 export const SAMPLE_TASK_STATE = {
-  taskName: 'sampleNewModule',
+  taskName: 'launchStartup',
   requiredVariables: [
-    { id: 'rv-sample-1', name: 'moduleName' },
-    { id: 'rv-sample-2', name: 'className' },
+    { id: 'rv-1', name: 'appName' },
+    { id: 'rv-2', name: 'founder' },
   ],
   computedVariables: [
-    { id: 'cv-sample-1', name: 'tplDir', expression: '${templatesDir}/new-module' },
-    { id: 'cv-sample-2', name: 'srcDir', expression: '${moduleName}/src/main/java/com/example/${moduleName}' },
+    { id: 'cv-1', name: 'appDir', expression: 'apps/${appName}' },
+    { id: 'cv-2', name: 'apiDir', expression: '${appDir}/api' },
+    { id: 'cv-3', name: 'webDir', expression: '${appDir}/web' },
   ],
   items: [
-    { id: 'item-sample-s1', type: '__SECTION__', title: 'Directory Structure' },
-    { id: 'item-sample-1', type: 'CreateDirectory', args: { path: '${srcDir}' }, collapsed: false },
-    { id: 'item-sample-2', type: 'CreateDirectory', args: { path: '${moduleName}/src/test/java/com/example/${moduleName}' }, collapsed: false },
-    { id: 'item-sample-s2', type: '__SECTION__', title: 'Config Files' },
-    { id: 'item-sample-3', type: 'CreateFile', args: { path: '${moduleName}/build.gradle' }, collapsed: false },
-    { id: 'item-sample-4', type: 'ReplaceFile', args: { targetPath: '${moduleName}/build.gradle', templatePath: '${tplDir}/build-gradle.tpl' }, collapsed: false },
-    { id: 'item-sample-s3', type: '__SECTION__', title: 'Register Module' },
-    { id: 'item-sample-5', type: 'InsertAtAnchorInline', args: { targetPath: 'settings.gradle', inlineContent: "include '${moduleName}'", anchor: '/* <scaffold-anchor-module> */' }, collapsed: false },
-    { id: 'item-sample-s4', type: '__SECTION__', title: 'Main Class' },
-    { id: 'item-sample-6', type: 'CreateFile', args: { path: '${srcDir}/${className}.java' }, collapsed: false },
-    { id: 'item-sample-7', type: 'ReplaceFile', args: { targetPath: '${srcDir}/${className}.java', templatePath: '${tplDir}/main-class.tpl' }, collapsed: false },
+    { id: 's1', type: '__SECTION__', title: '🚀 Launch Sequence', blankBefore: false },
+    { id: 'i1', type: 'CreateDirectory', args: { path: '${appDir}' }, collapsed: false },
+    { id: 'i2', type: 'CreateDirectory', args: { path: '${apiDir}/routes' }, collapsed: false },
+    { id: 'i3', type: 'CreateDirectory', args: { path: '${webDir}/components' }, collapsed: false },
+
+    { id: 's2', type: '__SECTION__', title: '⚡ Core', blankBefore: true },
+    { id: 'i4', type: 'CreateFile', args: { path: '${apiDir}/server.js' }, collapsed: false },
+    { id: 'i5', type: 'ReplaceFile', args: { targetPath: '${apiDir}/server.js', templatePath: 'templates/express-server.tpl' }, collapsed: false },
+    { id: 'i6', type: 'CreateFile', args: { path: '${webDir}/App.jsx' }, collapsed: false },
+    { id: 'i7', type: 'AppendToFile', args: { targetPath: '${webDir}/App.jsx', templatePath: 'templates/react-app.tpl' }, collapsed: false },
+
+    { id: 's3', type: '__SECTION__', title: '🔌 Wire It Up', blankBefore: true },
+    { id: 'i8', type: 'InsertAtAnchorInline', args: { targetPath: 'workspace.json', inlineContent: '"${appName}": { "root": "${appDir}" }', anchor: '// <apps>' }, collapsed: false },
+    { id: 'i9', type: 'InsertAtAnchor', args: { targetPath: 'docker-compose.yml', templatePath: 'templates/docker-service.tpl', anchor: '# <services>' }, collapsed: false },
+
+    { id: 's4', type: '__SECTION__', title: '✨ Ship It', blankBefore: true },
+    { id: 'i10', type: 'CreateFile', args: { path: '${appDir}/README.md' }, collapsed: false },
+    { id: 'i11', type: 'ReplaceFile', args: { targetPath: '${appDir}/README.md', templatePath: 'templates/readme.tpl' }, collapsed: false },
+    { id: 'i12', type: 'InsertAtAnchorInline', args: { targetPath: 'CHANGELOG.md', inlineContent: '- 🎉 ${appName} launched by ${founder}', anchor: '<!-- releases -->' }, collapsed: false },
   ],
 };
