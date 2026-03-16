@@ -1,0 +1,32 @@
+{
+  "name": "scaffold-task-builder",
+  "version": "1.0.0",
+  "description": "A zero-dependency visual editor for building `.task` files used by the scaffold engine. No build step, no `node_modules` — just HTML, CSS, and vanilla JavaScript with ES modules.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "serve": "serve -l 8275 --no-clipboard",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test:e2e": "npx serve -l 8275 --no-clipboard & sleep 2 && npx cypress run; kill %1 2>/dev/null",
+    "test:unit": "npx serve -l 8275 --no-clipboard & sleep 2 && npx cypress run --spec 'cypress/e2e/unit/**/*.cy.js'; kill %1 2>/dev/null"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wesley-M/scaffold-task-builder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Wesley-M/scaffold-task-builder/issues"
+  },
+  "homepage": "https://github.com/Wesley-M/scaffold-task-builder#readme",
+  "devDependencies": {
+    "cypress": "^15.12.0",
+    "serve": "^14.2.6"
+  }
+}

@@ -353,6 +353,7 @@ class Store {
   }
 
   selectItem(id, opts = {}) {
+    if (this._active().state.selectedItemId === id) return;
     this._scrollToSelected = opts.scroll !== false;
     this.setState(s => ({ ...s, selectedItemId: id }), { skipHistory: true });
   }

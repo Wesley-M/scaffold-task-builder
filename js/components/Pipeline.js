@@ -49,6 +49,15 @@ export function createPipeline() {
   let draggedIndex = null;
   let dragOverIndex = null;
 
+  // Only allow drag when initiated from the drag handle, not from buttons/inputs.
+  // Setting draggable on mousedown/mouseup prevents the browser's drag detection
+  // from swallowing click events on child action buttons.
+  list.addEventListener('mousedown', (e) => {
+    const handle = e.target.closest('.card__drag-handle');
+    const card = e.target.closest('.card');
+    if (card) card.draggable = !!handle;
+  });
+
   list.addEventListener('dragstart', (e) => {
     const card = e.target.closest('.card');
     if (!card) return;
@@ -191,9 +200,6 @@ function renderPipeline(container, state) {
   let selectedCard = null;
   for (const item of state.items) {
     const card = createInstructionCard(item, state.validationErrors);
-
-    // Make cards draggable for reorder
-    card.draggable = true;
 
     // Highlight selected
     if (state.selectedItemId === item.id) {

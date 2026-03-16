@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cypress Test Helper</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <div id="app"></div>
+  <div id="test-mount" style="position:fixed;top:-9999px;left:-9999px;width:1024px;height:768px;overflow:hidden;"></div>
+  <script type="module">
+    import { parseTaskFile } from './js/lib/parser.js';
+    import { serializeTask, serializeTaskWithLineMap } from './js/lib/serializer.js';
+    import { validate } from './js/lib/validator.js';
+    import { resolveVariables, extractVariableRefs, buildVariableMap } from './js/lib/resolver.js';
+    import { store } from './js/store.js';
+    import { INSTRUCTION_SCHEMA, InstructionType, createInstruction, createSection, createVariable, createId, DEFAULT_VARIABLES } from './js/types.js';
+    import { SAMPLE_TASK_STATE } from './js/sampleTask.js';
+    import { el, clearChildren, debounce, showToast } from './js/utils/dom.js';
+    import { createInstructionCard } from './js/components/InstructionCard.js';
+    import { createTabBar } from './js/components/TabBar.js';
+    import { createPipeline } from './js/components/Pipeline.js';
+    import { createPalette } from './js/components/Palette.js';
+    import { createContextPanel } from './js/components/ContextPanel.js';
+    import { createVariableInput } from './js/components/shared/VariableInput.js';
+    import { initTooltips } from './js/lib/tooltip.js';
+
+    initTooltips();
+
+    window.__test__ = {
+      parseTaskFile, serializeTask, serializeTaskWithLineMap, validate,
+      resolveVariables, extractVariableRefs, buildVariableMap,
+      store,
+      INSTRUCTION_SCHEMA, InstructionType, createInstruction, createSection, createVariable, createId, DEFAULT_VARIABLES,
+      SAMPLE_TASK_STATE,
+      el, clearChildren, debounce, showToast,
+      createInstructionCard, createTabBar, createPipeline, createPalette, createContextPanel, createVariableInput,
+    };
+    window.__testReady__ = true;
+  </script>
+</body>
+</html>

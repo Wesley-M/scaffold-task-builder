@@ -91,6 +91,12 @@ export function createInstructionCard(item, errors = []) {
 
   headerActions.append(dupBtn, collapseBtn, removeBtn);
 
+  // Prevent focusin from action buttons from bubbling to the card.
+  // Without this, clicking a button gives it focus → focusin bubbles →
+  // card handler calls selectItem → synchronous full re-render destroys
+  // the button before its click event fires.
+  headerActions.addEventListener('focusin', (e) => e.stopPropagation());
+
   // Error badge visible when collapsed
   if (item.collapsed && itemErrors.length > 0) {
     const severity = hasErrors ? 'error' : 'warning';
