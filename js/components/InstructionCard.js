@@ -259,7 +259,7 @@ function createSectionCard(item) {
   const removeBtn = el('button', {
     className: 'card__action-btn card__action-btn--danger',
     dataset: { tooltip: 'Remove section' },
-    onClick: () => store.removeItem(item.id),
+    onClick: (e) => { e.stopPropagation(); store.removeItem(item.id); },
   }, '\u00d7');
 
   card.append(dragHandle, el('span', { className: 'card__section-dash' }, '\u2500\u2500\u2500\u2500'), input, el('span', { className: 'card__section-dash' }, '\u2500\u2500\u2500\u2500'), removeBtn);
@@ -280,9 +280,11 @@ function createRawCard(item) {
   const removeBtn = el('button', {
     className: 'card__action-btn card__action-btn--danger',
     dataset: { tooltip: 'Remove this line' },
-    onClick: () => store.removeItem(item.id),
+    onClick: (e) => { e.stopPropagation(); store.removeItem(item.id); },
   }, '\u00d7');
   const actions = el('span', { className: 'card__header-actions' }, removeBtn);
+  // Prevent focusin from action buttons from triggering re-render (same fix as instruction cards)
+  actions.addEventListener('focusin', (e) => e.stopPropagation());
   header.append(badge, actions);
 
   const body = el('div', { className: 'card__body' });

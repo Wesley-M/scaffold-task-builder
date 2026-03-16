@@ -73,4 +73,35 @@ describe('Tab Bar', () => {
     cy.get('.tab-bar__tab').last().click();
     cy.get('#taskName').should('have.value', 'secondTask');
   });
+
+  describe('Tab-Scoped Undo/Redo', () => {
+    it('undo in one tab does not affect another tab', () => {
+      // Tab 1: sample task loaded — record initial card count
+      cy.get('#pipeline-list .card').its('length').then((tab1Initial) => {
+        // Add an instruction to tab 1
+        cy.get('.palette__instr-item').contains('Create File').click();
+        cy.get('#pipeline-list .card').should('have.length', tab1Initial + 1);
+
+        // Open tab 2 (new empty tab)
+        cy.get('.tab-bar__add').click();
+        cy.get('#pipeline-list .card').should('have.length', 0);
+
+        // Add an instruction to tab 2
+        cy.get('.palette__instr-item').contains('Create File').click();
+        cy.get('#pipeline-list .card').should('have.length', 1);
+
+        // Switch back to tab 1
+        cy.get('.tab-bar__tab').first().click();
+        cy.get('#pipeline-list .card').should('have.length', tab1Initial + 1);
+
+        // Undo in tab 1 — should only revert tab 1's last action
+        cy.get('body').type('{ctrl}z');
+        cy.get('#pipeline-list .card').should('have.length', tab1Initial);
+
+        // Switch to tab 2 — its card should still be there (unaffected)
+        cy.get('.tab-bar__tab').last().click();
+        cy.get('#pipeline-list .card').should('have.length', 1);
+      });
+    });
+  });
 });

@@ -1,15 +1,21 @@
 # Scaffold Task Builder
 
-A zero-dependency visual editor for building `.task` files used by the scaffold engine. No build step, no `node_modules` — just HTML, CSS, and vanilla JavaScript with ES modules.
+A zero-dependency visual editor for building `.task` files used by the scaffold engine. No build step — just HTML, CSS, and vanilla JavaScript with ES modules.
 
 ## Quick Start
 
 ```bash
-cd scaffold-ui
+npm install          # install dev dependencies (Cypress, serve)
+npm run serve        # start local server on http://localhost:8275
+```
+
+Or without npm:
+
+```bash
 python3 -m http.server 8080
 ```
 
-Then open **http://localhost:8080** in your browser.
+Then open the URL in your browser.
 
 On first launch, a **sample task** (`sampleNewModule`) is loaded so you can explore the UI right away. An interactive guided tour highlights each area of the interface.
 
@@ -83,11 +89,63 @@ On first launch, a **sample task** (`sampleNewModule`) is loaded so you can expl
 | `Escape` | Close overlays / dismiss tour |
 | `←` / `→` | Navigate onboarding tour steps |
 
+## Testing
+
+The project uses [Cypress](https://www.cypress.io/) for both **end-to-end** and **unit** tests.
+
+### Running Tests
+
+```bash
+npm run test:e2e     # run all E2E tests (starts server automatically)
+npm run test:unit    # run unit tests only
+npm run cy:open      # open Cypress interactive runner (server must be running)
+npm run cy:run       # run all tests headlessly (server must be running)
+```
+
+### Test Suite
+
+| Suite | Files | Tests | What it covers |
+|-------|-------|-------|----------------|
+| **E2E** | `cypress/e2e/01-*.cy.js` – `12-*.cy.js` | ~100 | Full user interactions: toolbar, tabs, palette, pipeline cards, context panel, drag & drop, keyboard shortcuts, themes, onboarding, sync |
+| **Unit** | `cypress/e2e/unit/*.cy.js` | ~520 | Store, parser, serializer, validator, resolver, DOM helpers, component logic |
+
+### Writing Tests
+
+- Custom commands are in `cypress/support/e2e.js` (`visitApp`, `addInstruction`, `switchContextTab`, etc.)
+- Unit tests use `cypress-test-helper.html` as a harness that imports all app modules onto `window.__test__`
+- Card action buttons work with standard Cypress `.click()` — no `{force: true}` workarounds needed
+
 ## Project Structure
 
 ```
-scaffold-ui/
+scaffold-task-builder/
 ├── index.html                  # Entry point
+├── cypress.config.js           # Cypress configuration
+├── cypress-test-helper.html    # Unit test harness
+├── cypress/
+│   ├── support/e2e.js          # Custom commands & global hooks
+│   └── e2e/
+│       ├── 01-bootstrap.cy.js  # App startup, first-visit, autosave
+│       ├── 02-toolbar.cy.js    # Toolbar buttons, theme, font size, help
+│       ├── 03-tabs.cy.js       # Multi-tab management, undo/redo isolation
+│       ├── 04-palette.cy.js    # Variables, instruction list, search
+│       ├── 05-pipeline.cy.js   # Card actions, collapse, autocomplete
+│       ├── 06-context-panel.cy.js  # Preview, variables tab, validation
+│       ├── 07-panels.cy.js     # Panel minimize/maximize/resize
+│       ├── 08-drag-drop.cy.js  # Drag & drop reordering
+│       ├── 09-keyboard-shortcuts.cy.js
+│       ├── 10-onboarding.cy.js # Guided tour
+│       ├── 11-sync-status.cy.js    # Bidirectional preview sync
+│       ├── 12-edge-cases.cy.js     # Empty states, rapid undo/redo
+│       └── unit/               # Migrated unit tests (~520 tests)
+│           ├── store.cy.js
+│           ├── parser.cy.js
+│           ├── serializer.cy.js
+│           ├── validator.cy.js
+│           ├── resolver.cy.js
+│           ├── dom.cy.js
+│           ├── components.cy.js
+│           └── integration.cy.js
 ├── styles/
 │   ├── variables.css           # Solarized design tokens (colors, spacing, fonts)
 │   ├── cards.css               # Instruction card styles
